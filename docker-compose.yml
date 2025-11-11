@@ -1,0 +1,21 @@
+services:
+
+  bugreportweb:
+    networks: 
+      - net_bugreport_backend
+    build:
+      network: host
+      context: .
+      dockerfile: Dockerfile
+      args:
+        username: ${NUGET_USERNAME}
+        token: ${NUGET_TOKEN}
+    ports:
+      - "7601:8080"
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DevelopmentDocker
+
+networks:
+  net_bugreport_backend:
+    name: bugreport_backend
