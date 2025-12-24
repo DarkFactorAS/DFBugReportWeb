@@ -1,0 +1,17 @@
+name: Bug Report Web - CI Docker Container
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: bugreportwebimage
+
+jobs:
+  build:
+    name: Build Docker Image
+    uses: DarkFactorAS/Infrastructure/.github/workflows/infrastructure-server-ci.yml@v1.1
+    with:
+      project_path: "."
+      project_name: "BugReportWeb"
+    secrets: inherit
