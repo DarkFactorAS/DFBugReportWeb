@@ -7,9 +7,9 @@ services:
       network: host
       context: .
       dockerfile: Dockerfile
-      args:
-        username: ${NUGET_USERNAME}
-        token: ${NUGET_TOKEN}
+      secrets:
+        - nuget_username
+        - nuget_token
     ports:
       - "7601:8080"
     restart: always
@@ -19,3 +19,9 @@ services:
 networks:
   net_bugreport_backend:
     name: bugreport_backend
+
+secrets:
+  nuget_username:
+    environment: NUGET_USERNAME
+  nuget_token:
+    environment: NUGET_TOKEN
