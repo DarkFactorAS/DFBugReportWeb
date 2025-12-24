@@ -5,7 +5,7 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": "BugReportClient (web)",
+            "name": "BugReportWeb (web)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build_client",
