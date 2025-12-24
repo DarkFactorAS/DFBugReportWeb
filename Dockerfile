@@ -2,17 +2,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
-# Get the NuGet arguments and set as environment to use in NuGet
-ARG username
-ARG token
-ENV NUGET_USERNAME $username
-ENV NUGET_TOKEN $token
+# Add sourcepath as argument
+ARG source_path=./
 
 # Copy files
-COPY ./ ./
+COPY $source_path ./
 
-# Restore and build web
-RUN dotnet restore BugReportWeb.csproj
+# Restore and build web with NuGet secrets
+RUN --mount=type=secret,id=nuget_username \
+    --mount=type=secret,id=nuget_token \
+    export NUGET_USERNAME=$(cat /run/secrets/nuget_username) && \
+    export NUGET_TOKEN=$(cat /run/secrets/nuget_token) && \
+    dotnet restore BugReportWeb.csproj
+
 RUN dotnet publish BugReportWeb.csproj -c Release -o out
 
 # Build runtime image
@@ -20,5 +22,3 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "BugReportWeb.dll"]
-
-EXPOSE 5600:8080
